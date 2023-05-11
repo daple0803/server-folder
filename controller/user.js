@@ -16,7 +16,7 @@ export const login = asyncError(async (req, res, next) => {
     if (!user) {
         return res
             .status(400)
-            .json({ success: false, message: "Email không đúng" })
+            .json({ success: false, message: "Email hoặc mật khẩu không đúng" })
     }
 
     if (!password) return next(new ErrorHandler("Vui lòng nhập mật khẩu", 400))
@@ -38,7 +38,7 @@ export const signup = asyncError(async (req, res, next) => {
     // req.file
 
     let avatar = undefined
-    
+
     if (req.file) {
         const file = getDataUri(req.file)
         const myCloud = await cloudinary.v2.uploader.upload(file.content)
