@@ -8,7 +8,7 @@ export const processPayment = asyncError(async (req, res, next) => {
     const { totalAmount } = req.body
 
     const { client_secret } = await stripe.paymentIntents.create({
-        amount: Number(totalAmount * 100),
+        amount: Number(totalAmount),
         currency: "VND",
     })
 
@@ -89,9 +89,9 @@ export const processOrder = asyncError(async (req, res, next) => {
     const order = await Order.findById(req.params.id)
     if (!order) return next(new ErrorHandler("Không tìm thấy hóa đơn!", 404))
 
-    if (order.orderStatus === "Preparing") order.orderStatus = "Shipped"
-    else if (order.orderStatus === "Shipped") {
-        order.orderStatus = "Delivered"
+    if (order.orderStatus === "Đợi xác nhận") order.orderStatus = "Đã xác nhận"
+    else if (order.orderStatus === "Đã xác nhận") {
+        order.orderStatus = "Đã được vận chuyển"
         order.deliveredAt = new Date(Date.now())
     } else return next(new ErrorHandler("Đơn đã được vận chuyển!", 400))
 
