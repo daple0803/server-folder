@@ -8,13 +8,17 @@ import { Category } from "../models/category.js"
 export const getAllProducts = asyncError(async (req, res, next) => {
     const { keyword, category } = req.query
 
-    const products = await Product.find({
-        name: {
-            $regex: keyword ? keyword : "",
-            $options: "i",
-        },
-        category: category ? category : undefined,
-    })
+    let query = {}
+
+    if (category && category !== "All") {
+        query.category = category
+    }
+
+    if (keyword) {
+        query.name = { $regex: keyword, $options: "i" }
+    }
+
+    const products = await Product.find(query)
 
     res.status(200).json({
         success: true,
