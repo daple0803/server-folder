@@ -10,7 +10,7 @@ export const getAllProducts = asyncError(async (req, res, next) => {
 
     let query = {}
 
-    if (category && category !== "All") {
+    if (category) {
         query.category = category
     }
 
